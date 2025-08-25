@@ -1,0 +1,183 @@
+📌 Amazon S3 Storage Classes – Detailed Notes for Interview
+1. S3 Standard
+
+Default class – used when you don’t explicitly set a storage class.
+
+Durability: 99.999999999% (11 nines) – virtually zero chance of data loss.
+
+Availability: 99.99% across 3+ Availability Zones.
+
+Retrieval time: Milliseconds.
+
+Cost: Highest among classes (but justified for frequently accessed data).
+
+🔹 Use cases:
+
+Static website hosting (HTML, JS, CSS).
+
+Mobile app content (images, videos).
+
+Real-time log analytics.
+
+🔹 Interview Tip: Say “I would use S3 Standard for hot data that my application or users access frequently, where latency and high availability are critical.”
+--------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+2. S3 Intelligent-Tiering
+
+Designed for data with unpredictable or unknown access patterns.
+
+Automatically moves objects between tiers:
+
+Frequent Access
+
+Infrequent Access
+
+Archive Instant Access
+
+Monitoring fee (per 1,000 objects).
+
+Retrieval is milliseconds, regardless of tier.
+
+No retrieval charges in the frequent tier, but yes in IA/Archive tier.
+
+🔹 Use cases:
+
+Data lakes with mixed access.
+
+Media libraries where some files are accessed daily, some rarely.
+
+🔹 Interview Tip: “If I don’t know access patterns upfront, Intelligent-Tiering helps reduce cost without me setting lifecycle rules manually.”
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+3. S3 Standard-Infrequent Access (S3 Standard-IA)
+
+Durability: 11 nines across multiple AZs.
+
+Availability: 99.9%.
+
+Retrieval time: Milliseconds.
+
+Cost: Cheaper storage than Standard, but retrieval fee applies.
+
+🔹 Use cases:
+
+Monthly financial reports.
+
+Long-lived but occasionally accessed project files.
+
+Disaster recovery datasets.
+
+🔹 Interview Tip: “I’d use Standard-IA for data that isn’t hot, but still must be retrieved instantly when needed, like compliance data accessed once in a while.”
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+4. S3 One Zone-Infrequent Access (S3 One Zone-IA)
+
+Same as Standard-IA, but stored in only one AZ.
+
+Durability: 11 nines, but no multi-AZ resilience.
+
+Availability: 99.5%.
+
+Cost: 20% cheaper than Standard-IA.
+
+Retrieval: Milliseconds.
+
+🔹 Use cases:
+
+Re-creatable data (e.g., transcoded video, cache dumps).
+
+Secondary backups.
+
+🔹 Interview Tip: “If cost is important and I can tolerate AZ failure risk, I’d pick One Zone-IA. For critical data, I’ll stick with Standard-IA.”
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+5. S3 Glacier Instant Retrieval
+
+Archive class for rarely accessed but must be retrieved instantly.
+
+Durability: 11 nines.
+
+Availability: 99.9%.
+
+Retrieval: Milliseconds.
+
+Cost: Much lower than Standard-IA, but retrieval fee applies.
+
+🔹 Use cases:
+
+Medical images (X-rays, MRIs).
+
+Old media assets (videos, photos).
+
+🔹 Interview Tip: “This is for archival workloads where instant retrieval is mandatory. For example, hospital records need to be instantly available even if rarely accessed.”
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+6. S3 Glacier Flexible Retrieval (formerly Glacier)
+
+Low-cost archive storage.
+
+Retrieval time options:
+
+Expedited: 1–5 min (extra fee).
+
+Standard: 3–5 hrs.
+
+Bulk: 5–12 hrs.
+
+Durability: 11 nines.
+
+Availability: 99.99%.
+
+🔹 Use cases:
+
+Long-term archives.
+
+Disaster recovery backups.
+
+Regulatory documents that must be retained for years.
+
+🔹 Interview Tip: “I’d use Flexible Retrieval if I need archival at the lowest cost but can wait hours for access. Example: 5-year-old audit logs.”
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+7. S3 Glacier Deep Archive
+
+Cheapest S3 storage class.
+
+Durability: 11 nines.
+
+Availability: 99.99%.
+
+Retrieval time: 12–48 hours.
+
+Designed for 7–10 years retention.
+
+🔹 Use cases:
+
+Government compliance archives.
+
+Financial/legal records.
+
+Historical data preservation.
+
+🔹 Interview Tip: “Deep Archive is ideal for data we may never access, but must retain for compliance, like tax or medical records for 7 years.”
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+8. S3 Express One Zone (Newest)
+
+High-performance, single-AZ storage class.
+
+Lowest latency (sub-millisecond).
+
+Optimized for latency-sensitive workloads.
+
+Trade-off: No multi-AZ durability.
+
+🔹 Use cases:
+
+High-frequency trading.
+
+Real-time AI/ML inference.
+
+Low-latency content delivery.
+
+🔹 Interview Tip: “I’d use Express One Zone if milliseconds matter more than multi-AZ durability, e.g., in financial trading systems.”
