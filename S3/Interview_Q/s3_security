@@ -1,0 +1,143 @@
+IAM Policies vs Bucket Policies
+
+1. IAM Policy
+
+Defines what an AWS identity (user, group, or role) can do.
+It is identity-based.
+Example: You (a DevOps engineer) have an IAM user with permissions to s3:PutObject in a bucket.
+It follows the user/role wherever they go in AWS.
+✅ Use when: You want to control access for people or AWS services inside your AWS account.
+
+Example: IAM Policy (attached to an IAM user/role)
+This policy allows a developer to upload objects into a specific bucket:
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Action": "s3:PutObject",
+    "Resource": "arn:aws:s3:::devops-artifacts-bucket/*"
+  }]
+}
+
+2. Bucket Policy
+Defines what a bucket itself allows or denies.
+It is resource-based.
+Attached to the bucket, not a user.
+Can grant access to:
+- IAM users in your account
+- IAM users in another AWS account
+- Public (anonymous) users
+✅ Use when: You want to control access to the bucket directly — e.g., allow cross-account access, or allow public access (static websites, file downloads).
+
+Example: Bucket Policy (attached to bucket)
+This policy allows anyone on the internet to read objects (for static website hosting):
+{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Effect": "Allow",
+    "Principal": "*",
+    "Action": "s3:GetObject",
+    "Resource": "arn:aws:s3:::my-website-bucket/*"
+  }]
+}
+
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+DATA ENCRYPTION IN S3
+
+S3 encryption ensures that data stored in S3 buckets/objects is protected at rest (while stored) and optionally in transit (during upload/download).
+There are two main layers:
+1. Encryption in Transit 
+2. Encryption at Rest
+
+1. Encryption in Transit (Data moving between client and S3)
+- Handled with SSL/TLS (HTTPS).
+- If you upload/download via HTTPS → data is encrypted between your laptop/EC2/Lambda and S3.
+- If you accidentally use plain HTTP → data travels unencrypted (bad practice).
+- Almost all AWS SDKs and CLI use HTTPS by default.
+eg. aws s3 cp myfile.txt s3://my-bucket/ --endpoint-url https://s3.amazonaws.com
+This ensures the data is encrypted in transit.
+
+2. Encryption at Rest (Data stored inside S3)
+In AWS, data at rest refers to any data stored on persistent storage, such as Amazon S3 buckets, EBS volumes, or databases. AWS encryption for data at rest involves applying cryptographic algorithms to render this stored data unreadable to anyone without the correct AWS Key Management Service (KMS) key, providing a crucial layer of defense against unauthorized access or data breaches.
+
+> S3 provides 4 main ways to do this:
+1. SSE-S3 (Server-Side Encryption with Amazon S3-Managed Keys)
+Simplest option.
+AWS uses AES-256 algorithm to encrypt your data.
+AWS manages the keys for you (rotation, storage, everything).
+You just enable it → all objects are encrypted automatically.
+Example (upload with SSE-S3) -> aws s3 cp myfile.txt s3://my-bucket/ --sse AES256
+Best for:
+General purpose data.
+When compliance doesn’t require key management.
+
+2. SSE-KMS (Server-Side Encryption with AWS KMS Keys)
+More advanced & commonly used.
+Uses AWS Key Management Service (KMS).
+Keys can be:
+AWS-managed (aws/s3)
+Customer-managed (CMKs) → gives full control
+
+🔹 Benefits of SSE-KMS:
+
+Fine-grained permissions → you need both s3:GetObject and kms:Decrypt.
+Audit logging → CloudTrail records every key usage.
+Key rotation → automatic or manual.
+Best for Sensitive Data
+
+3. SSE-C (Server-Side Encryption with Customer-Provided Keys)
+You supply your own key for each upload/download.
+AWS does not store your key.
+AWS uses it only in memory to encrypt/decrypt the object.
+
+Best for:
+Companies that don’t trust AWS to manage keys.
+Rare, because it adds operational complexity.
+
+4. Client-Side Encryption
+Data is encrypted before it leaves your system.
+You manage your own keys.
+AWS only stores the already-encrypted file.
+
+Best for:
+Ultra-secure environments.
+When company must control encryption fully.
+
+🔹 How Decryption Works
+With SSE-S3 → AWS automatically decrypts when you access.
+
+With SSE-KMS → AWS checks if you have both s3:GetObject and kms:Decrypt permissions.
+
+With SSE-C → you must supply the same key during download.
+
+With Client-side → you decrypt manually after download.
+
+<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>
+
+> What is an S3 Pre-Signed URL?
+A Pre-Signed URL is a time-limited, secure URL that gives temporary access to a private object in S3.
+Generated using IAM credentials (user/role).
+Includes a signature and expiry time.
+Anyone who has the URL can perform the allowed action until it expires.
+After expiry → URL is invalid.
+
+-> Think of it like a “temporary signed ticket” for an S3 object.
+
+> How It Works
+You (with IAM access) generate a pre-signed URL.
+AWS signs it with your credentials.
+You share the URL (to user/app/customer).
+The recipient can download (or upload) without needing AWS credentials.
+When time expires, access is revoked automatically.
+
+> Actions Supported
+GET (download an object)
+PUT (upload an object)
+DELETE (delete an object, rare use case)
+
+Example Use Cases
+- Share a report with a customer for 24 hours without making the whole bucket public.
+- Allow a mobile app to upload photos to S3 directly (client uses a pre-signed PUT URL, no AWS credentials exposed).
+- Temporary access for third-party vendors (logs, build artifacts, etc.).
+- CI/CD pipelines (e.g., Jenkins/CodePipeline uploading artifacts).
