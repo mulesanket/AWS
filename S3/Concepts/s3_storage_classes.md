@@ -20,7 +20,7 @@ Mobile app content (images, videos).
 Real-time log analytics.
 
 🔹 Interview Tip: Say “I would use S3 Standard for hot data that my application or users access frequently, where latency and high availability are critical.”
---------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 2. S3 Intelligent-Tiering
 
@@ -47,7 +47,7 @@ Data lakes with mixed access.
 Media libraries where some files are accessed daily, some rarely.
 
 🔹 Interview Tip: “If I don’t know access patterns upfront, Intelligent-Tiering helps reduce cost without me setting lifecycle rules manually.”
----------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 3. S3 Standard-Infrequent Access (S3 Standard-IA)
 
@@ -68,7 +68,7 @@ Long-lived but occasionally accessed project files.
 Disaster recovery datasets.
 
 🔹 Interview Tip: “I’d use Standard-IA for data that isn’t hot, but still must be retrieved instantly when needed, like compliance data accessed once in a while.”
----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 4. S3 One Zone-Infrequent Access (S3 One Zone-IA)
 
@@ -89,7 +89,7 @@ Re-creatable data (e.g., transcoded video, cache dumps).
 Secondary backups.
 
 🔹 Interview Tip: “If cost is important and I can tolerate AZ failure risk, I’d pick One Zone-IA. For critical data, I’ll stick with Standard-IA.”
---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 5. S3 Glacier Instant Retrieval
 
@@ -110,7 +110,7 @@ Medical images (X-rays, MRIs).
 Old media assets (videos, photos).
 
 🔹 Interview Tip: “This is for archival workloads where instant retrieval is mandatory. For example, hospital records need to be instantly available even if rarely accessed.”
---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 6. S3 Glacier Flexible Retrieval (formerly Glacier)
 
@@ -137,7 +137,7 @@ Disaster recovery backups.
 Regulatory documents that must be retained for years.
 
 🔹 Interview Tip: “I’d use Flexible Retrieval if I need archival at the lowest cost but can wait hours for access. Example: 5-year-old audit logs.”
---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 7. S3 Glacier Deep Archive
 
@@ -160,7 +160,7 @@ Financial/legal records.
 Historical data preservation.
 
 🔹 Interview Tip: “Deep Archive is ideal for data we may never access, but must retain for compliance, like tax or medical records for 7 years.”
---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------------------------------------------
 
 8. S3 Express One Zone (Newest)
 
