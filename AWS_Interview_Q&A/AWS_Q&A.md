@@ -1,0 +1,4 @@
+
+> What is a use of NAT Gateway?
+- A NAT Gateway allows private subnet instances to reach the internet without exposing them. For example, in our ParentMail setup, app EC2s sat in private subnets with no public IPs. We used a NAT Gateway in the public subnet so those instances could download patches and pull Docker images. The internet couldn’t initiate traffic back, which kept the servers secure.
+- IGW is required for direct internet access by public subnets and supports both inbound and outbound traffic. NAT Gateway, on the other hand, is used by private subnets for outbound-only internet access — it hides private IPs behind its own Elastic IP. Typically, public-facing resources use IGW, and private backend resources use NAT Gateway for safe outbound access.

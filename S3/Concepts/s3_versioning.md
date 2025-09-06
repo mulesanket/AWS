@@ -21,3 +21,4 @@ To permanently delete an object and its versions, the delete marker and specific
 
 > Retrieval and Restoration:
 Users can retrieve specific versions of an object by referencing their unique version ID. This allows for restoration of previous states of an object, recovering from accidental deletions or overwrites.
+
